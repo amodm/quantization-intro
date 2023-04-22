@@ -1,0 +1,7 @@
+Pillow
+einops
+opencv_python
+streamlit
+torch
+torchvision
+transformers
