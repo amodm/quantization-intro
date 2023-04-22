@@ -1,5 +1,5 @@
 # Introduction to Quantization
-This project was originally concieved as a hackday project for [Deep Hack Mar 2023](https://hasgeek.com/generativeAI/deep-hackathon/), but has since been extended to be a way to introduce people to Quantization. The corresponding talk is to be done at [GenerativeAI Apr Meetup](https://hasgeek.com/generativeAI/april-meetup/), and the link to it (and the slides) will be updated here when it's done & ready.
+This project was originally concieved as a hackday project for [Deep Hack Mar 2023](https://hasgeek.com/generativeAI/deep-hackathon/), but has since been extended to be a way to introduce people to Quantization. The corresponding talk was done at [GenerativeAI Apr Meetup](https://hasgeek.com/generativeAI/april-meetup/), and the link to it will be updated here when it's done & ready. The deck used in the talk, [is available here](https://github.com/amodm/quantization-intro/blob/main/2023-04-genai-meetup-quantization.pptx)
 
 Updated: 2023-04-22 10:55pm IST
 
