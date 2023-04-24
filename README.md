@@ -1,7 +1,37 @@
 # Introduction to Quantization
 This project was originally concieved as a hackday project for [Deep Hack Mar 2023](https://hasgeek.com/generativeAI/deep-hackathon/), but has since been extended to be a way to introduce people to Quantization. The corresponding talk was done at [GenerativeAI Apr Meetup](https://hasgeek.com/generativeAI/april-meetup/), and the link to it will be updated here when it's done & ready. The deck used in the talk, [is available here](https://github.com/amodm/quantization-intro/blob/main/2023-04-genai-meetup-quantization.pptx)
 
-Updated: 2023-04-22 10:55pm IST
+Updated: 2023-04-24 08:18am IST
+
+## Key Points of the talk
+
+Basics
+* Neural Networks are universal function approximators, and as such can _learn_ almost anything
+* What they learn gets stored as matrices (technically, tensors) of _weights_ & _biases_. Both of these are usually floating point numbers.
+* Floating point (FP) numbers can be represented in computers at different precisions (and thus taking different memory space), e.g. 32-bit floating point number is more precise than a 16-bit number.
+* GPUs are faster at matrix operations, and so can _process_ neural networks much faster, but this requires the model to fit in GPU memory, as system memory access is much slower. Smaller (less precise) representations of FP numbers can make this possible.
+* Smaller representations of FP numbers also require lesser compute, so GPU can execute more such operations per cycle, a win-win.
+* Quantization involves converting bigger FP representations to smaller, to reduce model size, so that it can fit in memory and run faster.
+
+Demo
+* Despite reducing precision significantly, we see that performance of the neural network largely remains the same during inference. This shows that DNNs are very resilient to small perturbations in the weights & biases.
+* How can we leverage this to quantize better?
+
+Uniform Quantization (INT8)
+* We can scale a range of FP numbers (say α to β) to 8-bit integers (-127 to 127) uniformly (technique detailed in talk), by projecting it to the -127 to 127 range.
+* Quantization in this way will obviously cluster a bunch of FP numbers to the same INT8 number.
+* Dequantization is a straightforward reversal of the process, with the caveat that we don't recover the original number, we recover only the center of the range that got projected to this INT8 number.
+* The talk describes the _absmax_ variant of it (i.e. taking the max of abs value of α,β and using that as input range to be projected). There's a _zeropoint_ variant as well, which is not described here.
+* Similarly, we can choose to project to INT4 (4-bit integers) than INT8.
+
+Distribution of weights:
+* FP numbers in the weights matrix can be distributed in different ways. If we're not careful, a large number of weights can map to the same bucket during quantization, reducing accuracy & perplexity.
+* Different techniques use different ways to handle these distributions. For simple ones, _absmax_ INT projection (described above) works, but not always.
+* Doing INT projection per row/col of matrix is very often used (some nuances to this that aren't described here).
+* LLM.int8 paper shows that at larger scales, outlier features show up which greatly affect output (and so cannot be pruned). We cannot use the row/col quantization, because feature dimensions (axis) lie orthogonal to the matrix product dimensions. LLM.int8 paper presents a method to handle them.
+* SmoothQuant takes a different approach to the above problem by _smoothening_ the spike in input (X) by scaling it down with a factor, while scaling up the appropriate weight matrix (Y) entries correspondingly. This effectively _shifts_ the spikes from X to Y, giving us a better range to work with during quantization.
+
+We ran out of time to cover other slides in the talk, but you can refer to some minor comments in the presented notes of those slides.
 
 ## Resources
 * Links included in the slides
